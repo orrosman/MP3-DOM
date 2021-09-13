@@ -37,8 +37,9 @@ function createSongElement({ id, title, album, artist, duration, coverArt }) {
 function createPlaylistElement({ id, name, songs }) {
     const nameElement = createElement("span", [name]);
     const songsElement = createElement("span", [songs.length]);
+    const lengthElement = createElement("span", convertDuration(playlistDuration(getPlaylistById([id]))));
 
-    return createElement("div", ["Playlist Name: ", nameElement, "Songs in the playlist: ", songsElement])
+    return createElement("div", ["Playlist Name: ", nameElement, "Songs in the playlist: ", songsElement, lengthElement])
 }
 
 /**
@@ -83,6 +84,30 @@ function convertDuration(duration) {
     }
 
     return min + ':' + sec
+}
+
+
+function getSongById(id) {
+    for (let i = 0; i < player.songs.length; i++) {
+        if (player.songs[i].id == id)
+        return player.songs[i]
+    }
+}
+
+function getPlaylistById(id) {
+    for (let i = 0; i < player.playlists.length; i++) {
+        if (player.playlists[i].id == id)
+            return player.playlists[i]
+    }
+}
+
+function playlistDuration(playlist) {
+    let sum = 0
+
+    for (let i = 0; i < playlist.songs.length; i++) {
+        sum += getSongById(playlist.songs[i]).duration
+    }
+    return sum
 }
 
 function displaySongs(){

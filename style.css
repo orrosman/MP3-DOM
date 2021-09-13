@@ -1,1 +1,20 @@
 /* Your code here */
+body{
+    font-family: 'Open Sans', Arial, sans-serif;
+    position: relative;
+    background-color: #4c5863;
+    color:  #ece9e9;
+    font-size: larger;
+}
+.album-cover{
+    width: 100px;
+    margin-right: 10px;
+}
+span{
+    margin-right: 10px;
+}
+
+div{
+    border-style: ridge;
+    text-align: center;
+}
