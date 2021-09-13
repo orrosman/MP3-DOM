@@ -12,11 +12,24 @@ function playSong(songId) {
  * Creates a song DOM element based on a song object.
  */
 function createSongElement({ id, title, album, artist, duration, coverArt }) {
-    const children = []
-    const classes = []
-    const attrs = { onclick: `playSong(${id})` }
-    return createElement("div", children, classes, attrs)
+    const titleElement = createElement("span", [title])
+    const albumElement = createElement("span", [album])
+    const artistElement = createElement("span", [artist])
+    const durationElement = createElement("span", [duration])
+    const coverArtElement = createElement("img", [], ["album-cover"], {src: coverArt})
+
+    return createElement("div", [coverArtElement, "Title: ", titleElement, "Artist: ", artistElement, "Album: ", albumElement, durationElement])
 }
+// function createSongElement({ id, title, album, artist, duration, coverArt }) {
+//     const artistEl = createElement("span", [artist]);
+
+//     const durationEl = createElement("span", ["" + duration], ["duration", "short-duration"], { onclick: `console.log('${duration}')` });
+
+//     const coverImageArtUrl = "https://townsquare.media/site/295/files/2015/09/Razors-Edge.jpg";
+//     const imgEl = createElement("img", [], ["album-art"], { src: coverImageArtUrl });
+
+//     return createElement("div", ["Artist: ", artistEl, "Duration: ", durationEl, imgEl]);
+// }
 
 /**
  * Creates a playlist DOM element based on a playlist object.
@@ -44,7 +57,7 @@ function createElement(tagName, children = [], classes = [], attributes = {}) {
     const element = document.createElement(tagName);
 
     for(const child of children){
-        element.append(createElement(child))
+        element.append(child)
     }
     for(const cls of classes){
         element.classList.add(cls);
