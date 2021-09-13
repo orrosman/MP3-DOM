@@ -15,7 +15,7 @@ function createSongElement({ id, title, album, artist, duration, coverArt }) {
     const titleElement = createElement("span", [title])
     const albumElement = createElement("span", [album])
     const artistElement = createElement("span", [artist])
-    const durationElement = createElement("span", [duration])
+    const durationElement = createElement("span", convertDuration([duration]))
     const coverArtElement = createElement("img", [], ["album-cover"], {src: coverArt})
 
     return createElement("div", [coverArtElement, "Title: ", titleElement, "Artist: ", artistElement, "Album: ", albumElement, durationElement])
@@ -35,10 +35,10 @@ function createSongElement({ id, title, album, artist, duration, coverArt }) {
  * Creates a playlist DOM element based on a playlist object.
  */
 function createPlaylistElement({ id, name, songs }) {
-    const children = []
-    const classes = []
-    const attrs = {}
-    return createElement("div", children, classes, attrs)
+    const nameElement = createElement("span", [name]);
+    const songsElement = createElement("span", [songs.length]);
+
+    return createElement("div", ["Playlist Name: ", nameElement, "Songs in the playlist: ", songsElement])
 }
 
 /**
@@ -71,10 +71,33 @@ function createElement(tagName, children = [], classes = [], attributes = {}) {
 
 // You can write more code below this line
 
+function convertDuration(duration) {
+    let min = Math.floor(duration / 60);
+    let sec = duration % 60;
+
+    if (min < 10) {
+        min = "0" + String(min);
+    }
+    if (sec < 10) {
+        sec = "0" + String(sec);
+    }
+
+    return min + ':' + sec
+}
+
 function displaySongs(){
     const songDiv = document.getElementById("songs");
     for(let song of player.songs){
         songDiv.append(createSongElement(song))
     }
 }
+
+function displayPlaylists(){
+    const playlistDiv = document.getElementById("playlists");
+    for (let playlist of player.playlists){
+        playlistDiv.append(createPlaylistElement(playlist))
+    }
+}
+
 displaySongs()
+displayPlaylists()
