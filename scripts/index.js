@@ -70,3 +70,11 @@ function createElement(tagName, children = [], classes = [], attributes = {}) {
 }
 
 // You can write more code below this line
+
+function displaySongs(){
+    const songDiv = document.getElementById("songs");
+    for(let song of player.songs){
+        songDiv.append(createSongElement(song))
+    }
+}
+displaySongs()
