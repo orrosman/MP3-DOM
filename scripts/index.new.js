@@ -20,8 +20,10 @@ function removeSong(songId) {
 /**
  * Adds a song to the player, and updates the DOM to match.
  */
-function addSong({ title, album, artist, duration, coverArt }) {
-    // Your code here
+function addSong(id, title, album, artist, duration, coverArt) {
+    const song = createSongElement({id, title, album, artist, duration, coverArt});
+    const songDiv = document.getElementById("songs")
+    songDiv.append(song)
 }
 
 /**
@@ -40,21 +42,42 @@ function handleSongClickEvent(event) {
  * @param {MouseEvent} event - the click event
  */
 function handleAddSongEvent(event) {
-    // Your code here
+    const title = document.getElementById("title").value
+    const album = document.getElementById("album").value
+    const artist = document.getElementById("artist").value
+    const duration = document.getElementById("duration").value
+    const coverArt = document.getElementById("cover-art").value
+    const id = Math.floor(Math.random() * 1000) + 1
+    addSong(id, title, album, artist, duration, coverArt)
 }
 
 /**
  * Creates a song DOM element based on a song object.
  */
-function createSongElement({ id, title, album, artist, duration, coverArt }) {
+function createSongElement({id, title, album, artist, duration, coverArt}) {
     const titleElement = createElement("span", [title])
     const albumElement = createElement("span", [album])
     const artistElement = createElement("span", [artist])
-    const durationElement = createElement("span", convertDuration([duration]))
+    const durationElement = createElement("span", [duration])
     const coverArtElement = createElement("img", [], ["album-cover"], { src: coverArt })
-    const attributes = { onclick: playSong(id), id: id };
+    const attributes = {id: id };
+    const eventListeners = {onclick: playSong(id)}
 
-    return createElement("div", [coverArtElement, "Title: ", titleElement, "Artist: ", artistElement, "Album: ", albumElement, durationElement], [], attributes)
+    return createElement("div", [coverArtElement, "Title: ", titleElement, "Artist: ", artistElement, "Album: ", albumElement, durationElement], [], attributes, eventListeners)
+}
+
+function convertDuration(duration) {
+    let min = Math.floor(duration / 60);
+    let sec = duration % 60;
+
+    if (min < 10) {
+        min = "0" + String(min);
+    }
+    if (sec < 10) {
+        sec = "0" + String(sec);
+    }
+
+    return min + ':' + sec
 }
 
 /**
@@ -66,6 +89,29 @@ function createPlaylistElement({ id, name, songs }) {
     const lengthElement = createElement("span", convertDuration(playlistDuration(getPlaylistById([id]))));
 
     return createElement("div", ["Playlist Name: ", nameElement, "Songs in the playlist: ", songsElement, lengthElement])
+}
+
+function getSongById(id) {
+    for (let i = 0; i < player.songs.length; i++) {
+        if (player.songs[i].id == id)
+            return player.songs[i]
+    }
+}
+
+function playlistDuration(playlist) {
+    let sum = 0
+
+    for (let i = 0; i < playlist.songs.length; i++) {
+        sum += getSongById(playlist.songs[i]).duration
+    }
+    return sum
+}
+
+function getPlaylistById(id) {
+    for (let i = 0; i < player.playlists.length; i++) {
+        if (player.playlists[i].id == id)
+            return player.playlists[i]
+    }
 }
 
 /**
