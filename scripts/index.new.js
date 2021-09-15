@@ -5,7 +5,9 @@
  * @param {Number} songId - the ID of the song to play
  */
 function playSong(songId) {
-    // Your code here
+    const songDiv = document.getElementById(songId)
+    songDiv.style.backgroundColor = "#11bd59"
+    console.log(songId)
 }
 
 /**
@@ -14,7 +16,8 @@ function playSong(songId) {
  * @param {Number} songId - the ID of the song to remove
  */
 function removeSong(songId) {
-    // Your code here
+    const song = document.getElementById(songId)
+    song.remove()
 }
 
 /**
@@ -33,7 +36,13 @@ function addSong(id, title, album, artist, duration, coverArt) {
  * @param {MouseEvent} event - the click event
  */
 function handleSongClickEvent(event) {
-    // Your code here
+    const action = event.target.innerText;
+    if (action == "Play / Pause"){
+        playSong(this.id)
+    }
+    else{
+        removeSong(this.id)
+    }
 }
 
 /**
@@ -58,12 +67,20 @@ function createSongElement({id, title, album, artist, duration, coverArt}) {
     const titleElement = createElement("span", [title])
     const albumElement = createElement("span", [album])
     const artistElement = createElement("span", [artist])
-    const durationElement = createElement("span", [duration])
+    const durationElement = createElement("span", convertDuration([duration]))
     const coverArtElement = createElement("img", [], ["album-cover"], { src: coverArt })
     const attributes = {id: id };
-    const eventListeners = {onclick: playSong(id)}
+    const eventListeners = {}
+    const playButton = document.createElement("button");
+    const deleteButton = document.createElement("button");
 
-    return createElement("div", [coverArtElement, "Title: ", titleElement, "Artist: ", artistElement, "Album: ", albumElement, durationElement], [], attributes, eventListeners)
+    playButton.innerText = "Play / Pause"
+    deleteButton.innerText = "Delete";
+
+    const song = createElement("div", [coverArtElement, "Title: ", titleElement, "Artist: ", artistElement, "Album: ", albumElement, durationElement, playButton, deleteButton], [], attributes, eventListeners)
+    song.addEventListener("click",handleSongClickEvent);
+    return song
+
 }
 
 function convertDuration(duration) {
