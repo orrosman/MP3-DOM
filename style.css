@@ -18,3 +18,9 @@ div{
     border-style: ridge;
     text-align: center;
 }
+
+.playing{
+    /* .style.backgroundColor = "#11bd59" */
+    background-color: rgb(17, 189, 89);
+
+}

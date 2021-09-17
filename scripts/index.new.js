@@ -6,8 +6,16 @@
  */
 function playSong(songId) {
     const songDiv = document.getElementById(songId)
-    songDiv.style.backgroundColor = "#11bd59"
-    console.log(songId)
+
+    const songsList = document.getElementById("list").getElementsByTagName("div"); //gets all song elements in the list
+    
+    for(let song of songsList){  //checks if any other song is playing
+        if(song.classList == "playing"){
+            song.classList.remove("playing")
+        }
+    }
+    songDiv.classList.add("playing")
+
 }
 
 /**
@@ -38,7 +46,12 @@ function addSong(id, title, album, artist, duration, coverArt) {
 function handleSongClickEvent(event) {
     const action = event.target.innerText;
     if (action == "Play / Pause"){
-        playSong(this.id)
+        if(document.getElementById(this.id).classList == "playing"){  //checks if the song is already playing. if so, it stops it.
+            document.getElementById(this.id).classList.remove("playing")
+        }
+        else{
+            playSong(this.id)
+        }
     }
     else{
         removeSong(this.id)
@@ -169,7 +182,7 @@ function createElement(tagName, children = [], classes = [], attributes = {}, ev
  * Inserts all songs in the player as DOM elements into the songs list.
  */
 function generateSongs() {
-    const songDiv = document.getElementById("songs");
+    const songDiv = document.getElementById("list");
     for (let song of player.songs) {
         songDiv.append(createSongElement(song))
     }
