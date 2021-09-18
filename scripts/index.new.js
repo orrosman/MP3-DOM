@@ -7,8 +7,8 @@
 function playSong(songId) {
     const songDiv = document.getElementById(songId)
 
-    const songsList = document.getElementById("list").getElementsByTagName("div"); //gets all song elements in the list
-    
+    const songsList = document.querySelector(".list").getElementsByTagName("div"); //gets all song elements in the list
+
     for(let song of songsList){  //checks if any other song is playing
         if(song.classList == "playing"){
             song.classList.remove("playing")
@@ -24,8 +24,25 @@ function playSong(songId) {
  * @param {Number} songId - the ID of the song to remove
  */
 function removeSong(songId) {
+    //remove song from list
     const song = document.getElementById(songId)
     song.remove()
+
+    //remove song from all playlist
+    for(let playlist of player.playlists){
+        for (let songIndex = 0; songIndex<playlist.songs.length; songIndex++){
+            if(playlist.songs[songIndex] == songId){
+                playlist.songs.splice(songIndex, 1)
+                
+                const playlistElements = document.querySelector("#playlists .list")
+                while(playlistElements.firstChild){
+                    playlistElements.removeChild(playlistElements.firstChild)
+                }
+                generatePlaylists()
+            }
+        }
+    }
+
 }
 
 /**
@@ -83,14 +100,13 @@ function createSongElement({id, title, album, artist, duration, coverArt}) {
     const durationElement = createElement("span", convertDuration([duration]))
     const coverArtElement = createElement("img", [], ["album-cover"], { src: coverArt })
     const attributes = {id: id };
-    const eventListeners = {}
     const playButton = document.createElement("button");
     const deleteButton = document.createElement("button");
 
     playButton.innerText = "Play / Pause"
     deleteButton.innerText = "Delete";
 
-    const song = createElement("div", [coverArtElement, "Title: ", titleElement, "Artist: ", artistElement, "Album: ", albumElement, durationElement, playButton, deleteButton], [], attributes, eventListeners)
+    const song = createElement("div", [coverArtElement, "Title: ", titleElement, "Artist: ", artistElement, "Album: ", albumElement, durationElement, playButton, deleteButton], [], attributes)
     song.addEventListener("click",handleSongClickEvent);
     return song
 
@@ -118,7 +134,7 @@ function createPlaylistElement({ id, name, songs }) {
     const songsElement = createElement("span", [songs.length]);
     const lengthElement = createElement("span", convertDuration(playlistDuration(getPlaylistById([id]))));
 
-    return createElement("div", ["Playlist Name: ", nameElement, "Songs in the playlist: ", songsElement, lengthElement])
+    return createElement("div", ["Playlist Name: ", nameElement, "Songs in the playlist: ", songsElement, lengthElement],[name])
 }
 
 function getSongById(id) {
@@ -182,7 +198,7 @@ function createElement(tagName, children = [], classes = [], attributes = {}, ev
  * Inserts all songs in the player as DOM elements into the songs list.
  */
 function generateSongs() {
-    const songDiv = document.getElementById("list");
+    const songDiv = document.querySelector("#songs .list")
     for (let song of player.songs) {
         songDiv.append(createSongElement(song))
     }
@@ -192,7 +208,7 @@ function generateSongs() {
  * Inserts all playlists in the player as DOM elements into the playlists list.
  */
 function generatePlaylists() {
-    const playlistDiv = document.getElementById("playlists");
+    const playlistDiv = document.querySelector("#playlists .list")
     for (let playlist of player.playlists) {
         playlistDiv.append(createPlaylistElement(playlist))
     }
